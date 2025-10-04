@@ -32,10 +32,8 @@ function errorHandler(err, req, res, next) {
   // Prefer concise logs in production; include stack for local debugging
   const isProd = (process.env.NODE_ENV || 'development') === 'production';
   if (!isProd) {
-    // eslint-disable-next-line no-console
     console.error(err && err.stack ? err.stack : err);
   } else {
-    // eslint-disable-next-line no-console
     console.error(err && err.message ? err.message : 'Unhandled error');
   }
 
