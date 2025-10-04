@@ -3,18 +3,6 @@
 const notesService = require('../services/notes');
 
 /**
- * Convert a caught error into a standardized error response body
- * @param {Error & { statusCode?: number, details?: any }} err
- */
-function toErrorBody(err) {
-  return {
-    status: 'error',
-    message: err && err.message ? err.message : 'An error occurred',
-    ...(err && err.details !== undefined ? { details: err.details } : {}),
-  };
-}
-
-/**
  * PUBLIC_INTERFACE
  * listNotes
  * Express handler to list notes.
@@ -43,11 +31,6 @@ async function getNote(req, res, next) {
     const note = await notesService.getById(req.params.id);
     return res.status(200).json({ status: 'success', data: note });
   } catch (err) {
-    if (err && typeof err.statusCode === 'number') {
-      if (err.statusCode === 400 || err.statusCode === 404) {
-        return res.status(err.statusCode).json(toErrorBody(err));
-      }
-    }
     return next(err);
   }
 }
@@ -64,9 +47,6 @@ async function createNote(req, res, next) {
     const created = await notesService.create(req.body);
     return res.status(201).json({ status: 'success', data: created });
   } catch (err) {
-    if (err && typeof err.statusCode === 'number' && err.statusCode === 400) {
-      return res.status(400).json(toErrorBody(err));
-    }
     return next(err);
   }
 }
@@ -84,11 +64,6 @@ async function updateNote(req, res, next) {
     const updated = await notesService.update(req.params.id, req.body);
     return res.status(200).json({ status: 'success', data: updated });
   } catch (err) {
-    if (err && typeof err.statusCode === 'number') {
-      if (err.statusCode === 400 || err.statusCode === 404) {
-        return res.status(err.statusCode).json(toErrorBody(err));
-      }
-    }
     return next(err);
   }
 }
@@ -106,11 +81,6 @@ async function deleteNote(req, res, next) {
     await notesService.remove(req.params.id);
     return res.status(204).send();
   } catch (err) {
-    if (err && typeof err.statusCode === 'number') {
-      if (err.statusCode === 400 || err.statusCode === 404) {
-        return res.status(err.statusCode).json(toErrorBody(err));
-      }
-    }
     return next(err);
   }
 }

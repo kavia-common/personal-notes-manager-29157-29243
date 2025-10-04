@@ -1,4 +1,10 @@
-// This file will export middleware as the application grows
+'use strict';
+
+const { validate } = require('./validation');
+const { errorHandler } = require('./error');
+
+// This file exports middleware as the application grows
 module.exports = {
-  // Add your middleware here
+  validate,
+  errorHandler,
 };
